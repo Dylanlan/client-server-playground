@@ -1,0 +1,1 @@
+This personal project is just for testing out different combinations of languages / frameworks for a simple client & server.
