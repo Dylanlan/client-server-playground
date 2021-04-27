@@ -1,5 +1,13 @@
-<script lang="ts">
-	let name = 'world';
+<script>
+	import Basics from './Basics.svelte';
 </script>
 
-<h1>Hello {name}!</h1>
+
+<style>
+
+</style>
+
+
+<h1>Testing Svelte</h1>
+
+<Basics />
