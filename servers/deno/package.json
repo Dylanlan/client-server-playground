@@ -1,0 +1,14 @@
+{
+  "name": "deno-test",
+  "version": "0.0.0",
+  "description": "Testing out a simple deno web server",
+  "main": "index.js",
+  "scripts": {
+    "start": "deno run --allow-net --allow-plugin --allow-read --allow-write --unstable ./src/server.ts",
+    "update:lock": "deno cache --lock=lock.json --lock-write src/deps.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Dylan Stankievech",
+  "license": "ISC"
+}
