@@ -1,16 +1,15 @@
 <script>
-  let things = [
-    {
-      id: 1,
-      name: "Thing A",
-      description: "Some description for Thing A",
-    },
-    {
-      id: 2,
-      name: "Thing B",
-      description: "Some description for Thing B",
-    },
-  ];
+  import { onMount } from "svelte";
+
+  let things = [];
+
+  onMount(async () => {
+    await fetch(`http://localhost:8000/things`)
+      .then(r => r.json())
+      .then(data => {
+        things = data;
+      });
+  })
 
   let data = {
     name: "",
@@ -95,7 +94,7 @@
                 <button
                   type="submit"
                   on:click|preventDefault={addThing}
-                  class="btn btn-primary"
+                  class="btn btn-success"
                 >
                   Add Thing</button
                 >
@@ -103,7 +102,7 @@
                 <button
                   type="submit"
                   on:click|preventDefault={updateThing}
-                  class="btn btn-info"
+                  class="btn btn-success"
                 >
                   Save</button
                 >
@@ -113,20 +112,24 @@
         </div>
       </div>
       <div class="col-md-6">
-        {#each things as thing}
-          <div class="card mb-3">
-            <div class="card-body">
-              <h5 class="card-title">{thing.name}</h5>
-              <p class="card-text">{thing.description}</p>
-              <button class="btn btn-info" on:click={editThing(thing)}>
-                Edit</button
-              >
-              <button class="btn btn-danger" on:click={deleteThing(thing.id)}
-                >Delete</button
-              >
+        {#if things.length > 0}
+          {#each things as thing}
+            <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title">{thing.name}</h5>
+                <p class="card-text">{thing.description}</p>
+                <button class="btn btn-primary" on:click={editThing(thing)}>
+                  Edit</button
+                >
+                <button class="btn btn-danger" on:click={deleteThing(thing.id)}
+                  >Delete</button
+                >
+              </div>
             </div>
-          </div>
-        {/each}
+          {/each}
+        {:else}
+          <p class="loading">Loading...</p>
+        {/if}
       </div>
     </div>
   </div>
