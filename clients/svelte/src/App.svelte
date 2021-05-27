@@ -1,5 +1,5 @@
 <script>
-	import Basics from './Basics.svelte';
+	import Things from './Things.svelte';
 </script>
 
 
@@ -7,7 +7,4 @@
 
 </style>
 
-
-<h1>Testing Svelte</h1>
-
-<Basics />
+<Things />
