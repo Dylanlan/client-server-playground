@@ -1,6 +1,6 @@
 const thing = {
-  name: "some thing",
-  description: "more info",
+  name: "Some thing",
+  description: "Lorem Ipsum",
 };
 
 const db = {
