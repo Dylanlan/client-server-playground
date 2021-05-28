@@ -1,14 +1,28 @@
-const thing = {
-  name: "Some thing",
-  description: "Lorem Ipsum",
-};
+import { Client } from "./deps.ts";
 
-const db = {
-  getAll: () => [thing],
-  create: (thing: any) => 1,
-  get: (id: number) => thing,
-  update: (id: number, thing: any) => thing,
-  delete: (id: number) => thing,
-};
+class Database {
+  client: any;
 
-export default db;
+  constructor() {
+    this.connect();
+  }
+
+  async connect() {
+    const env = Deno.env.toObject();
+
+    this.client = new Client({
+      user: env.PG_USER,
+      password: env.PG_PASSWORD,
+      database: env.PG_DB,
+      hostname: env.PG_HOST,
+      port: env.PG_PORT,
+    });
+
+    await this.client.connect();
+  }
+}
+
+export default new Database().client;
+
+
+

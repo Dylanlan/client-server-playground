@@ -1,8 +1,8 @@
 import { RouterContext } from "./deps.ts";
-import db from "./db.ts";
+import thingsRepo from "./things.ts";
 
 export const getAllThings = async (ctx: RouterContext) => {
-  const things = await db.getAll();
+  const things = await thingsRepo.getAll();
   ctx.response.body = things;
 };
 
@@ -12,7 +12,7 @@ export const createThing = async (ctx: RouterContext) => {
     name,
     description,
   };
-  const id = await db.create(thing);
+  const id = await thingsRepo.create(thing);
   thing.id = id;
   ctx.response.status = 201;
   ctx.response.body = thing;
@@ -20,25 +20,25 @@ export const createThing = async (ctx: RouterContext) => {
 
 export const getThing = async (ctx: RouterContext) => {
   const id = parseInt(ctx.params.id ?? "", 10);
-  const thing: any = await db.get(id);
+  const thing: any = await thingsRepo.get(id);
   ctx.response.body = thing;
 };
 
 export const updateThing = async (ctx: RouterContext) => {
   const id = parseInt(ctx.params.id ?? "", 10);
   const { name, description } = await ctx.request.body().value;
-  const thing = await db.update(id, { name, description });
+  const thing = await thingsRepo.update(id, { name, description });
   if (!thing) {
     ctx.response.status = 404;
     ctx.response.body = { message: "thing not found" };
     return;
   }
-  ctx.response.body = await db.get(id);
+  ctx.response.body = await thingsRepo.get(id);
 };
 
 export const deleteThing = async (ctx: RouterContext) => {
   const id = parseInt(ctx.params.id ?? "", 10);
-  const thing = await db.delete(id);
+  const thing = await thingsRepo.delete(id);
 
   if (!thing) {
     ctx.response.status = 404;
