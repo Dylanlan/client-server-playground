@@ -1,7 +1,7 @@
 <script>
   import { onMount } from "svelte";
 
-  let things = [];
+  let things = null;
 
   onMount(async () => {
     await fetch(`http://localhost:8000/things`)
@@ -17,22 +17,30 @@
     id: null,
   };
 
-  let addThing = () => {
+  let createThing = async () => {
     const newThing = {
       id: things.length + 1,
       name: data.name,
       description: data.description,
     };
     things = things.concat(newThing);
+
     data = {
       id: null,
       name: "",
       description: "",
     };
+    await fetch(`http://localhost:8000/thing`, {
+      method: 'POST',
+      body: JSON.stringify(newThing),
+    });
   };
 
-  let deleteThing = (id) => {
+  let deleteThing = async (id) => {
     things = things.filter((thing) => thing.id !== id);
+    await fetch(`http://localhost:8000/thing/${id}`, {
+      method: 'DELETE',
+    });
   };
 
   let isEdit = false;
@@ -57,7 +65,7 @@
         description: "",
       };
     } else {
-      addThing();
+      createThing();
     }
   };
 </script>
@@ -93,7 +101,7 @@
               {#if isEdit === false}
                 <button
                   type="submit"
-                  on:click|preventDefault={addThing}
+                  on:click|preventDefault={createThing}
                   class="btn btn-success"
                 >
                   Add Thing</button
@@ -112,7 +120,11 @@
         </div>
       </div>
       <div class="col-md-6">
-        {#if things.length > 0}
+        {#if things === null}
+          <p class="loading">Loading...</p>
+        {:else if things.length === 0}
+        <p class="text-danger">No things!</p>
+        {:else}
           {#each things as thing}
             <div class="card mb-3">
               <div class="card-body">
@@ -127,9 +139,7 @@
               </div>
             </div>
           {/each}
-        {:else}
-          <p class="loading">Loading...</p>
-        {/if}
+        {/if} 
       </div>
     </div>
   </div>
