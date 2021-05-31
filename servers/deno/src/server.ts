@@ -8,6 +8,7 @@ import {
 } from "./routes.ts";
 import { bold, cyan, green, yellow } from "./deps.ts";
 import { oakCors } from "./deps.ts";
+import { db } from "./db.ts";
 
 const app = new Application();
 const router = new Router();
@@ -49,6 +50,8 @@ app.use(async (ctx, next) => {
 // Here, we are telling our application to use the router
 app.use(router.routes());
 app.use(router.allowedMethods());
+
+await db.sync({ drop: true });
 
 app.addEventListener("listen", ({ hostname, port }) => {
   console.log(

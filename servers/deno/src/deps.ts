@@ -9,3 +9,4 @@ export {
 } from "https://deno.land/std@0.95.0/fmt/colors.ts";
 export { Client } from "https://deno.land/x/postgres/mod.ts";
 import "https://deno.land/x/dotenv/load.ts";
+export { DataTypes, Database, Model, PostgresConnector } from 'https://deno.land/x/denodb/mod.ts';

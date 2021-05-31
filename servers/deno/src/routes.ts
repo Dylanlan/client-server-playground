@@ -1,24 +1,31 @@
 import { RouterContext } from "./deps.ts";
-import repo from "./repo.ts";
-import Thing from "./Thing.ts";
+import { Thing } from "./db.ts";
 
 export const getAllThings = async (ctx: RouterContext) => {
-  const things = await repo.getAll();
-  ctx.response.body = things;
+  try {
+    const things = await Thing.all();
+    ctx.response.body = things;
+  } catch (err) {
+    console.error(err);
+    ctx.response.status = 500;
+    ctx.response.body = 'woops';
+  }
 };
 
 export const createThing = async (ctx: RouterContext) => {
-  const { name, description } = await ctx.request.body().value;
-  const thing = new Thing(name, description);
-  const id = await repo.create(thing);
-  thing.id = id;
+  const body = await ctx.request.body().value;
+  const { name, description } = JSON.parse(body);
+  const result = await Thing.create({
+    name,
+    description
+  });
   ctx.response.status = 201;
-  ctx.response.body = thing;
+  ctx.response.body = 'success';
 };
 
 export const getThing = async (ctx: RouterContext) => {
   const id = parseInt(ctx.params.id ?? "", 10);
-  const thing = await repo.get(id);
+  const thing = await Thing.find(id);
   if (!thing) {
     ctx.response.status = 404;
     ctx.response.body = { message: "thing not found" };
@@ -28,20 +35,21 @@ export const getThing = async (ctx: RouterContext) => {
 };
 
 export const updateThing = async (ctx: RouterContext) => {
-  const id = parseInt(ctx.params.id ?? "", 10);
-  const { name, description } = await ctx.request.body().value;
-  const thing = await repo.update(id, { name, description });
-  if (!thing) {
-    ctx.response.status = 404;
-    ctx.response.body = { message: "thing not found" };
-    return;
-  }
-  ctx.response.body = await repo.get(id);
+  // const id = parseInt(ctx.params.id ?? "", 10);
+  // const { name, description } = await ctx.request.body().value;
+  // const thing = await repo.update(id, { name, description });
+  // if (!thing) {
+  //   ctx.response.status = 404;
+  //   ctx.response.body = { message: "thing not found" };
+  //   return;
+  // }
+  // ctx.response.body = await repo.get(id);
 };
 
 export const deleteThing = async (ctx: RouterContext) => {
   const id = parseInt(ctx.params.id ?? "", 10);
-  const thing = await repo.delete(id);
+  const thing = await Thing.deleteById(id);
+  console.log({thing});
 
   if (!thing) {
     ctx.response.status = 404;

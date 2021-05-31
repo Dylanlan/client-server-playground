@@ -1,28 +1,25 @@
-import { Client } from "./deps.ts";
+import { DataTypes, Database, Model, PostgresConnector } from 'https://deno.land/x/denodb/mod.ts';
 
-class Database {
-  client: any;
+const env = Deno.env.toObject();
 
-  constructor() {
-    this.connect();
-  }
+const connection = new PostgresConnector({
+  username: env.PG_USER,
+  password: env.PG_PASSWORD,
+  database: env.PG_DB,
+  host: env.PG_HOST,
+});
 
-  async connect() {
-    const env = Deno.env.toObject();
+export const db = new Database(connection);
 
-    this.client = new Client({
-      user: env.PG_USER,
-      password: env.PG_PASSWORD,
-      database: env.PG_DB,
-      hostname: env.PG_HOST,
-      port: env.PG_PORT,
-    });
+export class Thing extends Model {
+  static table = 'things';
+  static timestamps = true;
 
-    await this.client.connect();
-  }
+  static fields = {
+    id: { primaryKey: true, autoIncrement: true },
+    name: DataTypes.STRING,
+    description: DataTypes.STRING,
+  };
 }
 
-export default new Database().client;
-
-
-
+db.link([Thing]);
