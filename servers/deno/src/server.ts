@@ -51,7 +51,7 @@ app.use(async (ctx, next) => {
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-await db.sync({ drop: true });
+await db.sync();
 
 app.addEventListener("listen", ({ hostname, port }) => {
   console.log(
