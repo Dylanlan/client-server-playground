@@ -1,20 +1,23 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
+const { setAllShortcuts } = require('./shortcuts');
 
 function createWindow () {
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
-    }
+      preload: path.join(__dirname, 'preload.js'),
+      enableRemoteModule: true,
+    },
   })
 
   win.loadFile('index.html')
 }
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
+  setAllShortcuts();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
