@@ -9,12 +9,14 @@ export default function Post({ postData }: { postData: PostData }) {
       {postData.id}
       <br />
       {postData.date}
+      <br />
+      <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
     </Layout>
   )
 }
 
 export async function getStaticProps({ params }: { params: { id: string } }) {
-  const postData = getPostData(params.id)
+  const postData = await getPostData(params.id)
   return {
     props: {
       postData
